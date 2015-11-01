@@ -1,0 +1,70 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/detail_titel_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/material_deep_teal_500"
+            android:padding="30dp"
+            android:text="Title"
+            android:textColor="@android:color/white"
+            android:textSize="40sp" />
+
+        <!-- Content: Poster, Release Date, User Rating -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <!-- Poster -->
+            <ImageView
+                android:id="@+id/detail_poster_imageview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_local_movies_black_48dp" />
+
+            <!-- Content: Release Date, User Rating -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Release Date -->
+                <TextView
+                    android:id="@+id/detail_date_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Release Date"
+                    android:textSize="20sp" />
+
+                <!-- User Rating -->
+                <TextView
+                    android:id="@+id/detail_rating_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="User Rating" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Overview -->
+        <TextView
+            android:id="@+id/detail_overview_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Overview" />
+
+    </LinearLayout>
+</ScrollView>
