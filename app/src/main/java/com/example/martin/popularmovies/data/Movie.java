@@ -22,13 +22,15 @@ public class Movie implements Parcelable {
     private String mOverview;
     private String mUserRating;
     private String mReleaseDate;
+    private String[] mTrailers;
 
-    public Movie(String title, String posterPath, String overview, String userRating, String releaseDate) {
+    public Movie(String title, String posterPath, String overview, String userRating, String releaseDate, String[] trailers) {
         this.mTitle = title;
         this.mPosterPath = posterPath;
         this.mOverview = overview;
         this.mUserRating = userRating;
         this.mReleaseDate = releaseDate;
+        this.mTrailers = trailers;
     }
 
     public String getTitle() {
@@ -50,6 +52,8 @@ public class Movie implements Parcelable {
     public String getPosterPath() {
         return mPosterPath;
     }
+
+    public String[] getTrailers() { return mTrailers; }
 
     /**
      * @return Fully qualified poster URL with default poster size.
@@ -78,6 +82,7 @@ public class Movie implements Parcelable {
         dest.writeString(mOverview);
         dest.writeString(mUserRating);
         dest.writeString(mReleaseDate);
+        dest.writeStringArray(mTrailers);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR
@@ -100,5 +105,6 @@ public class Movie implements Parcelable {
         this.mOverview = in.readString();
         this.mUserRating = in.readString();
         this.mReleaseDate = in.readString();
+        this.mTrailers = in.createStringArray();
     }
 }
