@@ -3,12 +3,14 @@ package com.example.martin.popularmovies.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Martin on 26.07.2015.
  */
 public class Movie implements Parcelable {
     private static final String POSTER_BASE_PATH = "http://image.tmdb.org/t/p/";
-    private static final String HIGHEST_RATING = "/10";
+    public static final String MAX_RATING = "10";
     public static final String POSTER_SIZE_W92 = "w92/";
     public static final String POSTER_SIZE_W154 = "w154/";
     public static final String POSTER_SIZE_W185 = "w185/";
@@ -17,20 +19,27 @@ public class Movie implements Parcelable {
     public static final String POSTER_SIZE_W780 = "w780/";
     public static final String POSTER_SIZE_ORIGINAL = "original";
 
+    @SerializedName("title")
     private String mTitle;
-    private String mPosterPath;
-    private String mOverview;
-    private String mUserRating;
-    private String mReleaseDate;
-    private String[] mTrailers;
 
-    public Movie(String title, String posterPath, String overview, String userRating, String releaseDate, String[] trailers) {
+    @SerializedName("poster_path")
+    private String mPosterPath;
+
+    @SerializedName("overview")
+    private String mOverview;
+
+    @SerializedName("vote_average")
+    private String mUserRating;
+
+    @SerializedName("release_date")
+    private String mReleaseDate;
+
+    public Movie(String title, String posterPath, String overview, String userRating, String releaseDate) {
         this.mTitle = title;
         this.mPosterPath = posterPath;
         this.mOverview = overview;
         this.mUserRating = userRating;
         this.mReleaseDate = releaseDate;
-        this.mTrailers = trailers;
     }
 
     public String getTitle() {
@@ -41,19 +50,15 @@ public class Movie implements Parcelable {
         return mOverview;
     }
 
-    public String getUserRating() {
-        return mUserRating + HIGHEST_RATING;
-    }
+    public String getUserRating() { return mUserRating; }
 
-    public String getmReleaseDate() {
+    public String getReleaseDate() {
         return mReleaseDate;
     }
 
     public String getPosterPath() {
         return mPosterPath;
     }
-
-    public String[] getTrailers() { return mTrailers; }
 
     /**
      * @return Fully qualified poster URL with default poster size.
@@ -82,7 +87,6 @@ public class Movie implements Parcelable {
         dest.writeString(mOverview);
         dest.writeString(mUserRating);
         dest.writeString(mReleaseDate);
-        dest.writeStringArray(mTrailers);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR
@@ -105,6 +109,5 @@ public class Movie implements Parcelable {
         this.mOverview = in.readString();
         this.mUserRating = in.readString();
         this.mReleaseDate = in.readString();
-        this.mTrailers = in.createStringArray();
     }
 }

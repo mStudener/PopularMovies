@@ -3,19 +3,14 @@ package com.example.martin.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.martin.popularmovies.data.Movie;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 
 /**
@@ -51,8 +46,8 @@ public class DetailActivityFragment extends Fragment {
         mRating = (TextView)rootView.findViewById(R.id.detail_rating_textview);
         mOverview = (TextView)rootView.findViewById(R.id.detail_overview_textview);
         // TODO
-        ListView mTrailers = (ListView) rootView.findViewById(R.id.detail_trailers_listview);
-        mTrailers.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.list_item_trailer, movieData.getTrailers()));
+//        ListView mTrailers = (ListView) rootView.findViewById(R.id.detail_trailers_listview);
+//        mTrailers.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.list_item_trailer, movieData.getTrailers()));
 
         updateViews(movieData);
         return rootView;
@@ -62,8 +57,8 @@ public class DetailActivityFragment extends Fragment {
     private void updateViews(Movie movieData) {
         mTitle.setText(movieData.getTitle());
         Picasso.with(getActivity()).load(movieData.getFullPosterURL(Movie.POSTER_SIZE_W154)).placeholder(R.drawable.ic_local_movies_black_48dp).into(mPoster);
-        mDate.setText(movieData.getmReleaseDate());
-        mRating.setText(movieData.getUserRating());
+        mDate.setText(movieData.getReleaseDate());
+        mRating.setText(String.format("%1$s/%2$s", movieData.getUserRating(), Movie.MAX_RATING));
         mOverview.setText(movieData.getOverview());
     }
 
