@@ -6,18 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Martin on 24.05.2016.
+ * Created by Martin on 26.05.2016.
  */
-public class MovieResponse {
-
+public class TrailerResponse {
     @SerializedName("results")
-    private List<Movie> mResults;
+    private List<Trailer> mResults;
 
-    public MovieResponse() {
-        this.mResults = new ArrayList<Movie>();
+    public TrailerResponse() {
+        mResults = new ArrayList<>();
     }
 
-    public List<Movie> getResults() {
+    public List<Trailer> getTrailers() {
         return mResults;
     }
 }
