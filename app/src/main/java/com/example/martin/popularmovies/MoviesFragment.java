@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,10 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import com.example.martin.popularmovies.adapter.PosterAdapter;
 import com.example.martin.popularmovies.data.Movie;
+import com.example.martin.popularmovies.data.MovieResponse;
+import com.example.martin.popularmovies.retrofit.TheMovieDBService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +36,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -102,81 +112,26 @@ public class MoviesFragment extends Fragment {
         movieTask.execute(sortOrder);
     }
 
-    private class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
+    private class FetchMovieTask extends AsyncTask<String, Void, List<Movie>> {
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
-        private final String API_KEY = ""; // Insert your themoviedb.org API key here
+        private final String API_KEY = "fdb55f833f2bd32ed8b5d5b9a6fd5855"; // Insert your themoviedb.org API key here
 
 
         @Override
-        protected Movie[] doInBackground(String... params) {
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-            String movieJsonStr = null;
+        protected List<Movie> doInBackground(String... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-            String orderBy = ".desc";
+            TheMovieDBService service = retrofit.create(TheMovieDBService.class);
+            Call<MovieResponse> call = service.discoverMovies(params[0], API_KEY);
 
             try {
-                // Construct the URL for the query
-                final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
-                final String SORT_PARAM = "sort_by";
-                final String ORDER_PARAM = ".";
-                final String API_PARAM = "api_key";
-
-                Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_PARAM, params[0] + orderBy)
-                        .appendQueryParameter(API_PARAM, API_KEY)
-                        .build();
-
-                URL url = new URL(builtUri.toString());
-
-                // Create the request
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                // Read the input stream into a string
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer sB = new StringBuffer();
-
-                if (inputStream == null) {
-                    // Nothing to do
-                    return null;
-                }
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sB.append(line);
-                }
-
-                if (sB.length() == 0) {
-                    // Stream was empty
-                    return null;
-                }
-
-                movieJsonStr = sB.toString();
+                Response<MovieResponse> response = call.execute();
+                List<Movie> movies = response.body().getResults();
+                return movies;
             } catch (IOException e) {
-                Log.e(LOG_TAG, "Error ", e);
-                return null;
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
-                    }
-                }
-            }
-
-            try {
-                return getMovieDataFromJSON(movieJsonStr);
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
 
@@ -184,43 +139,11 @@ public class MoviesFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Movie[] result) {
-            if (result != null) {
+        protected void onPostExecute(List<Movie> movies) {
+            if (movies != null) {
                 mPosterAdapter.clear();
-                ArrayList<Movie> movies = new ArrayList<>(Arrays.asList(result));
                 mPosterAdapter.addAll(movies);
             }
         }
-
-        private Movie[] getMovieDataFromJSON(String moviesJSONStr) throws JSONException {
-            // These are the names of the JSON objects that need to be extracted.
-            final String MDB_RESULTS = "results";
-            final String MDB_TITLE = "original_title";
-            final String MDB_IMAGE = "poster_path";
-            final String MDB_OVERVIEW = "overview";
-            final String MDB_RELEASE_DATE = "release_date";
-            final String MDB_USER_RATING = "vote_average";
-
-            ArrayList<Movie> movies = new ArrayList<>();
-            JSONObject moviesJSON = new JSONObject(moviesJSONStr);
-            JSONArray movieArray = moviesJSON.getJSONArray(MDB_RESULTS);
-
-            for (int i = 0; i < movieArray.length(); i++) {
-                // Get the JSON object representing a movie
-                JSONObject movie = movieArray.getJSONObject(i);
-
-                String title = movie.getString(MDB_TITLE);
-                String image = movie.getString(MDB_IMAGE);
-                String overview = movie.getString(MDB_OVERVIEW);
-                String userRating = movie.getString(MDB_USER_RATING);
-                String releaseDate = movie.getString(MDB_RELEASE_DATE);
-
-                movies.add(new Movie(title, image, overview, userRating, releaseDate));
-
-            }
-
-            return movies.toArray(new Movie[movies.size()]);
-        }
-
     } // FetchMovieTask
 }
