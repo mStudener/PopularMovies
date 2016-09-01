@@ -8,6 +8,8 @@
     <string name="pref_sort_popularity" translateable="false">popular</string>
     <string name="pref_sort_label_rating">Highest-Rated</string>
     <string name="pref_sort_rating" translateable="false">top_rated</string>
+    <string name="pref_sort_label_favorites">Favorite Movies</string>
+    <string name="pref_sort_favorites" translatable="false">fav_movies</string>
     <string name="pref_sort_label">Sort By:</string>
     <string name="pref_sort_key" translatable="false">order</string>
 </resources>
