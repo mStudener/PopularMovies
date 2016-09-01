@@ -1,6 +1,10 @@
 package com.example.martin.popularmovies;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +20,8 @@ import android.widget.TextView;
 
 import com.example.martin.popularmovies.adapter.TrailerAdapter;
 import com.example.martin.popularmovies.data.Movie;
+import com.example.martin.popularmovies.data.MovieContract;
+import com.example.martin.popularmovies.data.MovieProvider;
 import com.example.martin.popularmovies.data.Trailer;
 import com.example.martin.popularmovies.data.TrailerResponse;
 import com.example.martin.popularmovies.retrofit.TheMovieDBService;
@@ -34,7 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
-//    private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
+    private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private TrailerAdapter mTrailerAdapter;
     private TextView mTitle;
@@ -44,6 +50,7 @@ public class DetailActivityFragment extends Fragment {
     private TextView mOverview;
 
     private Movie mMovie;
+
     public DetailActivityFragment() {
     }
 
@@ -56,6 +63,7 @@ public class DetailActivityFragment extends Fragment {
             mMovie = intent.getParcelableExtra("Data");
             fetchTrailers(mMovie.getId());
             updateViews(mMovie);
+            addToFavorites(); // TODO Let the user decide
         }
     }
 
@@ -63,11 +71,11 @@ public class DetailActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        mTitle = (TextView)rootView.findViewById(R.id.detail_titel_textview);
-        mPoster = (ImageView)rootView.findViewById(R.id.detail_poster_imageview);
-        mDate = (TextView)rootView.findViewById(R.id.detail_date_textview);
-        mRating = (TextView)rootView.findViewById(R.id.detail_rating_textview);
-        mOverview = (TextView)rootView.findViewById(R.id.detail_overview_textview);
+        mTitle = (TextView) rootView.findViewById(R.id.detail_titel_textview);
+        mPoster = (ImageView) rootView.findViewById(R.id.detail_poster_imageview);
+        mDate = (TextView) rootView.findViewById(R.id.detail_date_textview);
+        mRating = (TextView) rootView.findViewById(R.id.detail_rating_textview);
+        mOverview = (TextView) rootView.findViewById(R.id.detail_overview_textview);
 
         mTrailerAdapter = new TrailerAdapter(getActivity());
         ListView mTrailers = (ListView) rootView.findViewById(R.id.detail_trailers_listview);
@@ -101,6 +109,46 @@ public class DetailActivityFragment extends Fragment {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+    }
+
+    /**
+     * Helper method to handle insertion of a new movie in the movie database.
+     *
+     * @return the row ID of the added movie.
+     */
+    private long addToFavorites() {
+        long rowId;
+
+        // TODO Only select the complete row if really necessary
+        // Check if the movie already exists in the db
+        Cursor movieCursor = getActivity().getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                new String[]{ " * " },
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{mMovie.getId()},
+                null
+        );
+
+        if (movieCursor.moveToFirst()) {
+            Log.d(LOG_TAG, "The movie is already stored in the db");
+            int movieIdIdx = movieCursor.getColumnIndex(MovieContract.MovieEntry._ID);
+            rowId = movieCursor.getLong(movieIdIdx);
+        } else {
+            Log.d(LOG_TAG, "Add the movie to the db");
+            ContentValues movieValues = new ContentValues();
+            movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID,mMovie.getId());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, mMovie.getTitle());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER, mMovie.getPosterPath());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, mMovie.getOverview());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_USER_RATING, mMovie.getUserRating());
+            movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
+
+            Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
+            rowId = ContentUris.parseId(insertedUri);
+        }
+
+        movieCursor.close();
+        return rowId;
     }
 
     private class FetchTrailersTask extends AsyncTask<String, Void, List<Trailer>> {
