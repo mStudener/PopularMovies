@@ -51,6 +51,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="User Rating" />
+
+            <!-- Mark As Favorite -->
+            <ImageButton
+                android:id="@+id/detail_favorite_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_star_border"
+                android:background="@android:color/transparent"/>
         </LinearLayout>
     </LinearLayout>
 
