@@ -44,7 +44,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment {
-    private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
+    //private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private TrailerAdapter mTrailerAdapter;
     private ImageButton mFavoriteButton;
@@ -111,7 +111,6 @@ public class DetailActivityFragment extends Fragment {
     }
 
 
-
     private void updateViews(Movie movieData) {
         updateFavoriteButton();
         mTitle.setText(movieData.getTitle());
@@ -142,7 +141,6 @@ public class DetailActivityFragment extends Fragment {
     /**
      * Helper method to handle insertion of a new movie in the movie database.
      *
-     * @return the row ID of the added movie.
      */
     private void addToFavorites() {
         // Add the movie to the db
@@ -157,12 +155,15 @@ public class DetailActivityFragment extends Fragment {
         getActivity().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, movieValues);
     }
 
-
+    /**
+     * Helper method to handle deletion of a movie in the movie database
+     *
+     */
     private void removeFromFavorites() {
         getActivity().getContentResolver().delete(
                 MovieContract.MovieEntry.CONTENT_URI,
                 MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
-                new String[] {mMovie.getId()});
+                new String[]{mMovie.getId()});
     }
 
     private boolean isFavorite() {
