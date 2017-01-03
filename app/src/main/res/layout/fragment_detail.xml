@@ -1,76 +1,96 @@
 <!-- Main Content -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/detail_titel_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/material_deep_teal_500"
-        android:padding="30dp"
-        android:text="Title"
-        android:textColor="@android:color/white"
-        android:textSize="40sp" />
-
-    <!-- Content: Poster, Release Date, User Rating -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!-- Poster -->
-        <ImageView
-            android:id="@+id/detail_poster_imageview"
-            android:layout_width="0dp"
+        <!-- Title -->
+        <TextView
+            android:id="@+id/detail_titel_textview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_local_movies_black_48dp" />
+            android:background="@color/material_deep_teal_500"
+            android:padding="30dp"
+            android:text="Title"
+            android:textColor="@android:color/white"
+            android:textSize="40sp" />
 
-        <!-- Content: Release Date, User Rating -->
+        <!-- Content: Poster, Release Date, User Rating -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
 
-            <!-- Release Date -->
-            <TextView
-                android:id="@+id/detail_date_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Release Date"
-                android:textSize="20sp" />
+            <!-- Poster -->
+            <ImageView
+                android:id="@+id/detail_poster_imageview"
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_local_movies_black_48dp" />
 
-            <!-- User Rating -->
-            <TextView
-                android:id="@+id/detail_rating_textview"
-                android:layout_width="match_parent"
+            <!-- Content: Release Date, User Rating -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="User Rating" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <!-- Release Date -->
+                <TextView
+                    android:id="@+id/detail_date_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Release Date"
+                    android:textSize="20sp" />
+
+                <!-- User Rating -->
+                <TextView
+                    android:id="@+id/detail_rating_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="User Rating" />
+
+                <!-- Mark As Favorite -->
+                <ImageButton
+                    android:id="@+id/detail_favorite_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_star_border" />
+            </LinearLayout>
         </LinearLayout>
+
+        <!-- Overview -->
+        <TextView
+            android:id="@+id/detail_overview_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Overview" />
+
+        <!-- Trailers -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/detail_trailers_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:scrollbars="horizontal" />
+
+        <!-- Reviews -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/detail_reviews_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:scrollbars="horizontal" />
+
     </LinearLayout>
 
-    <!-- Overview -->
-    <TextView
-        android:id="@+id/detail_overview_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="Overview" />
-
-    <!-- Trailers -->
-    <ListView
-        android:id="@+id/detail_trailers_listview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:padding="10dp">
-
-    </ListView>
-
-</LinearLayout>
-
+</ScrollView>

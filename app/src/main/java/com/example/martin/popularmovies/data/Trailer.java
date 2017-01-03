@@ -34,4 +34,6 @@ public class Trailer {
     public String getUrl() {
         return "http://www.youtube.com/watch?v=" + mKey;
     }
+
+    public String getThumbnailUrl() { return "http://img.youtube.com/vi/" + mKey + "/hqdefault.jpg";}
 }

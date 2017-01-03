@@ -20,8 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Martin on 10.08.2016.
  */
 class FetchMovieTask extends AsyncTask<String, Void, List<Movie>> {
-    private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
-    private final String API_KEY = "fdb55f833f2bd32ed8b5d5b9a6fd5855"; // Insert your themoviedb.org API key here
+//    private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private PosterAdapter mPosterAdapter;
 
@@ -38,8 +37,7 @@ class FetchMovieTask extends AsyncTask<String, Void, List<Movie>> {
                 .build();
 
         TheMovieDBService service = retrofit.create(TheMovieDBService.class);
-        Call<MovieResponse> call = service.discoverMovies(params[0], API_KEY);
-        Log.d(LOG_TAG, params[0]);
+        Call<MovieResponse> call = service.discoverMovies(params[0], BuildConfig.API_KEY);
 
         try {
             Response<MovieResponse> response = call.execute();

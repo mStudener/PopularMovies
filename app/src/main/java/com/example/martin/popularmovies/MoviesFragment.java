@@ -103,6 +103,8 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mPosterAdapter.clear();
+
         if (data != null && data.moveToFirst()) {
             ArrayList<Movie> favMovies = new ArrayList<>();
             do {
@@ -117,7 +119,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
                 favMovies.add(movie);
             } while (data.moveToNext());
 
-            mPosterAdapter.clear();
             mPosterAdapter.addAll(favMovies);
         }
     }
@@ -136,6 +137,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         String sortOrder = preferences.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popularity));
 
         if (!sortOrder.equals(getString(R.string.pref_sort_favorites))) {
+            getLoaderManager().destroyLoader(FAVORITES_LOADER);
             FetchMovieTask movieTask = new FetchMovieTask(mPosterAdapter);
             movieTask.execute(sortOrder);
         } else {
