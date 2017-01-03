@@ -57,8 +57,8 @@
                 android:id="@+id/detail_favorite_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_star_border"
-                android:background="@android:color/transparent"/>
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_star_border" />
         </LinearLayout>
     </LinearLayout>
 
@@ -79,6 +79,14 @@
         android:padding="10dp">
 
     </ListView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/detail_reviews_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:padding="10dp"
+        android:scrollbars="horizontal" />
 
 </LinearLayout>
 

@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.martin.popularmovies.adapter.ReviewAdapter;
 import com.example.martin.popularmovies.adapter.TrailerAdapter;
 import com.example.martin.popularmovies.data.Movie;
 import com.example.martin.popularmovies.data.MovieContract;
@@ -49,6 +52,7 @@ public class DetailActivityFragment extends Fragment {
     //private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private TrailerAdapter mTrailerAdapter;
+    private ReviewAdapter mReviewAdapter;
     private ImageButton mFavoriteButton;
     private TextView mTitle;
     private ImageView mPoster;
@@ -109,6 +113,16 @@ public class DetailActivityFragment extends Fragment {
                 watchTrailer(trailer.getUrl());
             }
         });
+
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.detail_reviews_recyclerview);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter
+        mReviewAdapter = new ReviewAdapter(new ArrayList<Review>());
+        mRecyclerView.setAdapter(mReviewAdapter);
 
         return rootView;
     }
@@ -256,15 +270,9 @@ public class DetailActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Review> reviews) {
-            // TODO: 03/01/2017 Refresh review adapter
-//            if (trailers != null) {
-//                mTrailerAdapter.clear();
-//                mTrailerAdapter.addAll(trailers);
-//            }
-            for (Review r: reviews) {
-                Log.d(LOG_TAG, r.getContent());
+            if (reviews != null) {
+                mReviewAdapter.addAll(reviews);
             }
-
         }
     } // FetchReviewsTask
 
