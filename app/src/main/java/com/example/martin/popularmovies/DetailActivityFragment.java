@@ -25,6 +25,8 @@ import com.example.martin.popularmovies.adapter.TrailerAdapter;
 import com.example.martin.popularmovies.data.Movie;
 import com.example.martin.popularmovies.data.MovieContract;
 import com.example.martin.popularmovies.data.MovieProvider;
+import com.example.martin.popularmovies.data.Review;
+import com.example.martin.popularmovies.data.ReviewResponse;
 import com.example.martin.popularmovies.data.Trailer;
 import com.example.martin.popularmovies.data.TrailerResponse;
 import com.example.martin.popularmovies.retrofit.TheMovieDBService;
@@ -67,6 +69,7 @@ public class DetailActivityFragment extends Fragment {
         if (intent != null && intent.hasExtra("Data")) {
             mMovie = intent.getParcelableExtra("Data");
             fetchTrailers(mMovie.getId());
+            fetchReviews(mMovie.getId());
             updateViews(mMovie);
         }
     }
@@ -131,6 +134,11 @@ public class DetailActivityFragment extends Fragment {
         trailersTask.execute(id);
     }
 
+    private void fetchReviews(String id) {
+        FetchReviewsTask reviewsTask = new FetchReviewsTask();
+        reviewsTask.execute(id);
+    }
+
     private void watchTrailer(String url) {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -140,7 +148,6 @@ public class DetailActivityFragment extends Fragment {
 
     /**
      * Helper method to handle insertion of a new movie in the movie database.
-     *
      */
     private void addToFavorites() {
         // Add the movie to the db
@@ -157,7 +164,6 @@ public class DetailActivityFragment extends Fragment {
 
     /**
      * Helper method to handle deletion of a movie in the movie database
-     *
      */
     private void removeFromFavorites() {
         getActivity().getContentResolver().delete(
@@ -221,5 +227,45 @@ public class DetailActivityFragment extends Fragment {
             }
         }
     } // FetchTrailersTask
+
+    private class FetchReviewsTask extends AsyncTask<String, Void, List<Review>> {
+        private final String LOG_TAG = FetchReviewsTask.class.getSimpleName();
+        private final String API_KEY = "fdb55f833f2bd32ed8b5d5b9a6fd5855"; // Insert your themoviedb.org API key here
+
+
+        @Override
+        protected List<Review> doInBackground(String... params) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.themoviedb.org/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            TheMovieDBService service = retrofit.create(TheMovieDBService.class);
+            Call<ReviewResponse> call = service.fetchReviews(params[0], API_KEY);
+
+            try {
+                Response<ReviewResponse> response = call.execute();
+                List<Review> reviews = response.body().getReviews();
+                return reviews;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Review> reviews) {
+            // TODO: 03/01/2017 Refresh review adapter
+//            if (trailers != null) {
+//                mTrailerAdapter.clear();
+//                mTrailerAdapter.addAll(trailers);
+//            }
+            for (Review r: reviews) {
+                Log.d(LOG_TAG, r.getContent());
+            }
+
+        }
+    } // FetchReviewsTask
 
 }

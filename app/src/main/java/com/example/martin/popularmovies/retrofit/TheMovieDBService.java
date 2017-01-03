@@ -2,6 +2,7 @@ package com.example.martin.popularmovies.retrofit;
 
 import com.example.martin.popularmovies.data.Movie;
 import com.example.martin.popularmovies.data.MovieResponse;
+import com.example.martin.popularmovies.data.ReviewResponse;
 import com.example.martin.popularmovies.data.TrailerResponse;
 
 import java.util.List;
@@ -20,4 +21,7 @@ public interface TheMovieDBService {
 
     @GET("3/movie/{id}/videos")
     Call<TrailerResponse> fetchTrailers(@Path("id") String id, @Query("api_key") String apiKey);
+
+    @GET("3/movie/{id}/reviews")
+    Call<ReviewResponse> fetchReviews(@Path("id") String id, @Query("api_key") String apiKey);
 }
