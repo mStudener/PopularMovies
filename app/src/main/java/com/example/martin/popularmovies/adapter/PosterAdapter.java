@@ -53,7 +53,7 @@ public class PosterAdapter extends BaseAdapter {
         }
 
         imageView = (ImageView) convertView.findViewById(R.id.grid_item_poster_imageview);
-        Picasso.with(mContext).load(mMovies.get(position).getFullPosterURL()).placeholder(R.drawable.ic_local_movies_black_48dp).fit().into(imageView);
+        Picasso.with(mContext).load(mMovies.get(position).getFullPosterURL(Movie.POSTER_SIZE_W342)).placeholder(R.drawable.ic_local_movies_black_48dp).into(imageView);
 
         return imageView;
     }

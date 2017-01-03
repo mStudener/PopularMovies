@@ -3,12 +3,14 @@ package com.example.martin.popularmovies.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Martin on 26.07.2015.
  */
 public class Movie implements Parcelable {
     private static final String POSTER_BASE_PATH = "http://image.tmdb.org/t/p/";
-    private static final String HIGHEST_RATING = "/10";
+    public static final String MAX_RATING = "10";
     public static final String POSTER_SIZE_W92 = "w92/";
     public static final String POSTER_SIZE_W154 = "w154/";
     public static final String POSTER_SIZE_W185 = "w185/";
@@ -17,19 +19,34 @@ public class Movie implements Parcelable {
     public static final String POSTER_SIZE_W780 = "w780/";
     public static final String POSTER_SIZE_ORIGINAL = "original";
 
+    @SerializedName("id")
+    private String mId;
+
+    @SerializedName("original_title")
     private String mTitle;
+
+    @SerializedName("poster_path")
     private String mPosterPath;
+
+    @SerializedName("overview")
     private String mOverview;
+
+    @SerializedName("vote_average")
     private String mUserRating;
+
+    @SerializedName("release_date")
     private String mReleaseDate;
 
-    public Movie(String title, String posterPath, String overview, String userRating, String releaseDate) {
+    public Movie(String id, String title, String posterPath, String overview, String userRating, String releaseDate) {
+        this.mId = id;
         this.mTitle = title;
         this.mPosterPath = posterPath;
         this.mOverview = overview;
         this.mUserRating = userRating;
         this.mReleaseDate = releaseDate;
     }
+
+    public String getId() { return mId; }
 
     public String getTitle() {
         return mTitle;
@@ -39,11 +56,9 @@ public class Movie implements Parcelable {
         return mOverview;
     }
 
-    public String getUserRating() {
-        return mUserRating + HIGHEST_RATING;
-    }
+    public String getUserRating() { return mUserRating; }
 
-    public String getmReleaseDate() {
+    public String getReleaseDate() {
         return mReleaseDate;
     }
 
@@ -73,6 +88,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
         dest.writeString(mTitle);
         dest.writeString(mPosterPath);
         dest.writeString(mOverview);
@@ -95,6 +111,7 @@ public class Movie implements Parcelable {
     };
 
     private Movie(Parcel in) {
+        this.mId = in.readString();
         this.mTitle = in.readString();
         this.mPosterPath = in.readString();
         this.mOverview = in.readString();
