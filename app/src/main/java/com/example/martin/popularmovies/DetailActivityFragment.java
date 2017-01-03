@@ -213,9 +213,7 @@ public class DetailActivityFragment extends Fragment {
     }
 
     private class FetchTrailersTask extends AsyncTask<String, Void, List<Trailer>> {
-        private final String LOG_TAG = FetchTrailersTask.class.getSimpleName();
-        private final String API_KEY = "fdb55f833f2bd32ed8b5d5b9a6fd5855"; // Insert your themoviedb.org API key here
-
+//        private final String LOG_TAG = FetchTrailersTask.class.getSimpleName();
 
         @Override
         protected List<Trailer> doInBackground(String... params) {
@@ -225,7 +223,7 @@ public class DetailActivityFragment extends Fragment {
                     .build();
 
             TheMovieDBService service = retrofit.create(TheMovieDBService.class);
-            Call<TrailerResponse> call = service.fetchTrailers(params[0], API_KEY);
+            Call<TrailerResponse> call = service.fetchTrailers(params[0], BuildConfig.API_KEY);
 
             try {
                 Response<TrailerResponse> response = call.execute();
@@ -247,9 +245,7 @@ public class DetailActivityFragment extends Fragment {
     } // FetchTrailersTask
 
     private class FetchReviewsTask extends AsyncTask<String, Void, List<Review>> {
-        private final String LOG_TAG = FetchReviewsTask.class.getSimpleName();
-        private final String API_KEY = "fdb55f833f2bd32ed8b5d5b9a6fd5855"; // Insert your themoviedb.org API key here
-
+//        private final String LOG_TAG = FetchReviewsTask.class.getSimpleName();
 
         @Override
         protected List<Review> doInBackground(String... params) {
@@ -259,7 +255,7 @@ public class DetailActivityFragment extends Fragment {
                     .build();
 
             TheMovieDBService service = retrofit.create(TheMovieDBService.class);
-            Call<ReviewResponse> call = service.fetchReviews(params[0], API_KEY);
+            Call<ReviewResponse> call = service.fetchReviews(params[0], BuildConfig.API_KEY);
 
             try {
                 Response<ReviewResponse> response = call.execute();

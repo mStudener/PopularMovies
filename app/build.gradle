@@ -10,6 +10,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        buildConfigField 'String', 'API_KEY', '"fdb55f833f2bd32ed8b5d5b9a6fd5855"' // Insert your themoviedb.org API key here
     }
     buildTypes {
         release {
