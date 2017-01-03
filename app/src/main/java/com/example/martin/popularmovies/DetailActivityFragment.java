@@ -102,27 +102,32 @@ public class DetailActivityFragment extends Fragment {
         mRating = (TextView) rootView.findViewById(R.id.detail_rating_textview);
         mOverview = (TextView) rootView.findViewById(R.id.detail_overview_textview);
 
-        mTrailerAdapter = new TrailerAdapter(getActivity());
-        ListView mTrailers = (ListView) rootView.findViewById(R.id.detail_trailers_listview);
-        mTrailers.setAdapter(mTrailerAdapter);
-
-        mTrailers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Trailer trailer = (Trailer) mTrailerAdapter.getItem(position);
-                watchTrailer(trailer.getUrl());
-            }
-        });
-
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.detail_reviews_recyclerview);
+        // horizontal scrollable view of trailers
+        RecyclerView mTrailerView = (RecyclerView) rootView.findViewById(R.id.detail_trailers_recyclerview);
 
         // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager mTrailerLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mTrailerView.setLayoutManager(mTrailerLayoutManager);
+
+        // specify an adapter
+        mTrailerAdapter = new TrailerAdapter(new ArrayList<Trailer>(), new TrailerAdapter.OnTrailerClickListener() {
+            @Override
+            public void onTrailerClick(String url) {
+                watchTrailer(url);
+            }
+        });
+        mTrailerView.setAdapter(mTrailerAdapter);
+
+        // horizontal scrollable view of reviews
+        RecyclerView mReviewView = (RecyclerView) rootView.findViewById(R.id.detail_reviews_recyclerview);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager mReviewLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mReviewView.setLayoutManager(mReviewLayoutManager);
 
         // specify an adapter
         mReviewAdapter = new ReviewAdapter(new ArrayList<Review>());
-        mRecyclerView.setAdapter(mReviewAdapter);
+        mReviewView.setAdapter(mReviewAdapter);
 
         return rootView;
     }
@@ -236,7 +241,6 @@ public class DetailActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Trailer> trailers) {
             if (trailers != null) {
-                mTrailerAdapter.clear();
                 mTrailerAdapter.addAll(trailers);
             }
         }
